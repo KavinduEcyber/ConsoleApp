@@ -1,1 +1,1 @@
-{'equipments': {'equipment1': {'price': 456, 'count': 12}}, 'hone': {'price': 12, 'count': 32.5}}
+{"equipments": {"equipment1": {"price": 456, "count": 12}, "mmedikit": {"price": 12, "count": 25.0}, "hello": {"price": 25.0, "count": 12}}}
