@@ -26,13 +26,14 @@ class Admin:
                 "price": qty,
                 "count": price,
             }
-            db.write_data('equipment.txt', str(equipments))
+            db.write_data(filename='equipment.txt', data=str(equipments))
         except FileNotFoundError:
             print('Error: Internal Server Error 001.')
 
 
-try:
-    admin = Admin(name='admin', password='123456')
-    admin.add_equipment('hone', 12, 32.50)
-except ValidationError as error:
-    print('Error:', error)
+if __name__ == '__main__':
+    try:
+        admin = Admin(name='admin', password='123456')
+        admin.add_equipment(name='hone', qty=12, price=32.50)
+    except ValidationError as error:
+        print('Error:', error)
