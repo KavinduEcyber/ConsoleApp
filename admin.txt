@@ -1,1 +1,1 @@
-{"admin":"dawdadda"}
+{"admin":"password"}

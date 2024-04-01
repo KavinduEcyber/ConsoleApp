@@ -44,7 +44,7 @@ class Admin:
 
 
 try:
-    admin = Admin(username='admin', password='dawdadda')
+    admin = Admin(username='admin', password='password')
     admin.add_items(name='Iphone', qty=10, price=2052)
     admin.all_items()
     admin.update_item(name='Iphone', update='price', new=8000)
