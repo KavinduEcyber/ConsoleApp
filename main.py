@@ -34,7 +34,8 @@ class Admin:
         try:
             equipments = db.read_data("equipment.txt")
             for equipment in equipments['equipments']:
-                print('Equipment name:', equipment, ' | Qty:', equipments['equipments'][equipment]['count'],' | Price:', equipments['equipments'][equipment]['price'])
+                print('Equipment name:', equipment, ' | Qty:', equipments['equipments'][equipment]['count'],
+                      ' | Price:', equipments['equipments'][equipment]['price'])
         except FileNotFoundError:
             print('Error: Internal Server Error 001.')
 
