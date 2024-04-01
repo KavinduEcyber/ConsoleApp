@@ -2,50 +2,51 @@ import json
 
 import database as db
 
+user_file = 'admin.txt'
+store_file = 'store.txt'
+repair_file = 'repair.txt'
 
-class ValidationError(Exception):
+
+class CustomError(Exception):
     pass
 
 
 class Admin:
-    def __init__(self, name: str, password: str):
-        data = db.read_data('users.txt')
-        if name in data['admin']:
-            if data['admin'][name] == password:
-                print('Admin Log in Success.')
+    def __init__(self, username: str, password: str):
+        try:
+            users = db.read_data(filename=user_file)
+            if username in users:
+                if users[username] == password:
+                    print('Login Success...!')
+                else:
+                    raise CustomError('Validation Error: UserName Or Password Incorrect!')
             else:
-                raise ValidationError("User Name And Password Invalid!")
-        else:
-            raise ValidationError("User Name And Password Invalid!")
-
-    def add_equipment(self, name: str, qty: int, price: float):
-        try:
-            equipments = db.read_data("equipment.txt")
-            equipments['equipments'][name] = {
-                "price": price,
-                "count": qty,
-            }
-            db.write_data(filename='equipment.txt', data=equipments)
-            print("New Equipment Add Successful!")
+                raise CustomError('Validation Error: UserName Or Password Incorrect!')
         except FileNotFoundError:
-            print('Error: Internal Server Error 001.')
+            raise CustomError('Internal Server Error: Admins Not Defined')
 
-    def all_equipment(self):
-        try:
-            equipments = db.read_data("equipment.txt")
-            for equipment in equipments['equipments']:
-                print('Equipment name:', equipment, ' | Qty:', equipments['equipments'][equipment]['count'],
-                      ' | Price:', equipments['equipments'][equipment]['price'])
-        except FileNotFoundError:
-            print('Error: Internal Server Error 001.')
+    def add_items(self, name: str, qty: int, price: float):
+        items = db.read_data(store_file)
+        items[name] = {"qty": qty, "price": price}
+        db.write_data(filename=store_file, content=json.dumps(items))
+        print('New Item', name, 'Add...')
+
+    def all_items(self):
+        items = db.read_data(store_file)
+        for item in items:
+            print(item, items[item]['qty'], items[item]['price'])
+
+    def update_item(self, name: str, update: str, new):
+        items = db.read_data(store_file)
+        items[name][update] = new
+        db.write_data(filename=store_file, content=json.dumps(items))
+        print(name, update, 'is Updated to', new)
 
 
-if __name__ == '__main__':
-    try:
-        admin = Admin(name='admin', password='123456')
-        admin.add_equipment(name="hello", qty=12, price=25.00)
-        admin.all_equipment()
-    except db.InternalServerError as error:
-        print('Error:', error)
-    except ValidationError as error:
-        print('Error:', error)
+try:
+    admin = Admin(username='admin', password='dawdadda')
+    admin.add_items(name='Iphone', qty=10, price=2052)
+    admin.all_items()
+    admin.update_item(name='Iphone', update='price', new=8000)
+except CustomError as error:
+    print(error)
