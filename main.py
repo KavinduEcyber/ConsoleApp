@@ -1,10 +1,11 @@
+import database as db
 import json
 
-import database as db
-
-user_file = 'admin.txt'
+admin_file = 'admin.txt'
 store_file = 'store.txt'
 repair_file = 'repair.txt'
+user_file = 'users.txt'
+invoice_file = 'invoice.txt'
 
 
 class CustomError(Exception):
@@ -14,10 +15,10 @@ class CustomError(Exception):
 class Admin:
     def __init__(self, username: str, password: str):
         try:
-            users = db.read_data(filename=user_file)
+            users = db.read_data(filename=admin_file)
             if username in users:
                 if users[username] == password:
-                    print('Login Success...!')
+                    print('Hello Admin Login Success...!')
                 else:
                     raise CustomError('Validation Error: UserName Or Password Incorrect!')
             else:
@@ -43,10 +44,75 @@ class Admin:
         print(name, update, 'is Updated to', new)
 
 
-try:
-    admin = Admin(username='admin', password='password')
-    admin.add_items(name='Iphone', qty=10, price=2052)
-    admin.all_items()
-    admin.update_item(name='Iphone', update='price', new=8000)
-except CustomError as error:
-    print(error)
+class User:
+    def __init__(self, username: str, password: str):
+        try:
+            users = db.read_data(filename=user_file)
+            if username in users:
+                if users[username] == password:
+                    self.username = username
+                    print('Hello Customer Login Success...!')
+                else:
+                    raise CustomError('Validation Error: UserName Or Password Incorrect!')
+            else:
+                raise CustomError('Validation Error: UserName Or Password Incorrect!')
+        except FileNotFoundError:
+            raise CustomError('Internal Server Error: Users Not Defined')
+
+    def all_items(self):
+        items = db.read_data(store_file)
+        for item in items:
+            print(item, items[item]['qty'], items[item]['price'])
+
+    def buy_item(self, name: str, qty: int, ):
+        items = db.read_data(store_file)
+        if name in items:
+            if qty <= items[name]['qty']:
+                invoices = db.read_data(invoice_file)
+                invoices[self.username][name] = {"qty": qty, "price": int(items[name]['price']) * qty}
+                db.write_data(filename=invoice_file, content=json.dumps(invoices))
+                print('Buy Success...')
+            else:
+                raise CustomError('Item Not Found: Quantity Not Available...!')
+        else:
+            raise CustomError('Item Not Found: ' + name + ' Not Found...!')
+
+
+# try:
+#     user = User(username='user', password='password')
+#     user.all_items()
+#     user.buy_item(name='I Phone', qty=5)
+# except CustomError as error:
+#     print(error)
+
+if __name__ == '__main__':
+    print('Welcome To E-TEC BME Bio-Medical Equipment')
+    user_type = str(input("Please Enter User Type 'admin' or 'customer' : ").lower())
+    if user_type == 'admin':
+        username = input('Enter Admin User Name : ')
+        password = input('Enter User Password : ')
+        try:
+            admin = Admin(username=username, password=password)
+            while True:
+                choice = int(input('\n[1] All Items \n[2] Add Item \n[3] Update Item \nEnter Your Choice : '))
+                if choice == 1:
+                    print('')
+                    admin.all_items()
+                elif choice == 2:
+                    item = input('Enter New Item Name : ')
+                    qty = int(input('Enter Item Qty : '))
+                    price = float(input('Enter Item price : '))
+                    admin.add_items(name=item, qty=qty, price=price)
+                else:
+                    print('Invalid Choice')
+        except CustomError as error:
+            print(error)
+    elif user_type == 'customer':
+        username = input('Enter Customer User Name : ')
+        password = input('Enter User Password : ')
+        try:
+            user = User(username=username, password=password)
+        except CustomError as error:
+            print(error)
+    else:
+        print('User Type Not Available!')
