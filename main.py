@@ -1,5 +1,6 @@
 import database as db
 import json
+import uuid
 
 admin_file = 'admin.txt'
 store_file = 'store.txt'
@@ -42,6 +43,12 @@ class Admin:
         items[name][update] = new
         db.write_data(filename=store_file, content=json.dumps(items))
         print(name, update, 'is Updated to', new)
+
+    def add_user(self, username: str, password: str):
+        users = db.read_data(user_file)
+        users[username] = password
+        db.write_data(filename=user_file, content=json.dumps(users))
+        print('New User', username, 'Add Success')
 
 
 class User:
@@ -90,7 +97,8 @@ if __name__ == '__main__':
         try:
             admin = Admin(username=username, password=password)
             while True:
-                choice = int(input('\n[1] All Items \n[2] Add Item \n[3] Update Item \nEnter Your Choice : '))
+                choice = int(input(
+                    '\n[1] All Items \n[2] Add Item \n[3] Update Item \n[4] Add New User \n[5] Exit \nEnter Your Choice : '))
                 if choice == 1:
                     print('')
                     admin.all_items()
@@ -99,6 +107,10 @@ if __name__ == '__main__':
                     qty = int(input('Enter Item Qty : '))
                     price = float(input('Enter Item price : '))
                     admin.add_items(name=item, qty=qty, price=price)
+                elif choice == 4:
+                    username = input('Enter New User  UserName : ')
+                    password = input('Enter New User Password : ')
+                    admin.add_user(username=username, password=password)
                 else:
                     print('Invalid Choice')
         except CustomError as error:
@@ -111,4 +123,4 @@ if __name__ == '__main__':
         except CustomError as error:
             print(error)
     else:
-        print('User Type Not Available!')
+        print('User Type', user_type, 'Not Available!')
