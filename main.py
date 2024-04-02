@@ -71,19 +71,15 @@ class User:
                 invoices = db.read_data(invoice_file)
                 invoices[self.username][name] = {"qty": qty, "price": int(items[name]['price']) * qty}
                 db.write_data(filename=invoice_file, content=json.dumps(invoices))
+                items = db.read_data(store_file)
+                items[name]['qyt'] = int(items[name]['qyt']) - qty
+                db.write_data(filename=store_file, content=json.dumps(items))
                 print('Buy Success...')
             else:
                 raise CustomError('Item Not Found: Quantity Not Available...!')
         else:
             raise CustomError('Item Not Found: ' + name + ' Not Found...!')
 
-
-# try:
-#     user = User(username='user', password='password')
-#     user.all_items()
-#     user.buy_item(name='I Phone', qty=5)
-# except CustomError as error:
-#     print(error)
 
 if __name__ == '__main__':
     print('Welcome To E-TEC BME Bio-Medical Equipment')
