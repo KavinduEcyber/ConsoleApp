@@ -13,7 +13,14 @@ class CustomError(Exception):
     pass
 
 
-class Admin:
+class Common:
+    def all_items(self):
+        items = db.read_data(store_file)
+        for item in items:
+            print(item, items[item]['qty'], items[item]['price'])
+
+
+class Admin(Common):
     def __init__(self, username: str, password: str):
         try:
             users = db.read_data(filename=admin_file)
@@ -33,11 +40,6 @@ class Admin:
         db.write_data(filename=store_file, content=json.dumps(items))
         print('New Item', name, 'Add...')
 
-    def all_items(self):
-        items = db.read_data(store_file)
-        for item in items:
-            print(item, items[item]['qty'], items[item]['price'])
-
     def update_item(self, name: str, update: str, new):
         items = db.read_data(store_file)
         items[name][update] = new
@@ -51,7 +53,7 @@ class Admin:
         print('New User', username, 'Add Success')
 
 
-class User:
+class User(Common):
     def __init__(self, username: str, password: str):
         try:
             users = db.read_data(filename=user_file)
@@ -65,11 +67,6 @@ class User:
                 raise CustomError('Validation Error: UserName Or Password Incorrect!')
         except FileNotFoundError:
             raise CustomError('Internal Server Error: Users Not Defined')
-
-    def all_items(self):
-        items = db.read_data(store_file)
-        for item in items:
-            print(item, items[item]['qty'], items[item]['price'])
 
     def buy_item(self, name: str, qty: int, ):
         items = db.read_data(store_file)
@@ -98,7 +95,7 @@ if __name__ == '__main__':
             admin = Admin(username=username, password=password)
             while True:
                 choice = int(input(
-                    '\n[1] All Items \n[2] Add Item \n[3] Update Item \n[4] Add New User \n[5] Exit \nEnter Your Choice : '))
+                    '\n[0] Search Item \n[1] All Items \n[2] Add Item \n[3] Update Item \n[4] Add New User \n[5] Exit \nEnter Your Choice : '))
                 if choice == 1:
                     print('')
                     admin.all_items()
@@ -120,6 +117,19 @@ if __name__ == '__main__':
         password = input('Enter User Password : ')
         try:
             user = User(username=username, password=password)
+            while True:
+                choice = int(input(
+                    '\n[0] Search Item \n[1] All Items \n[2] Buy Item \n[3] Return Item \nEnter Your Choice : '))
+                if choice == 0:
+                    pass
+                elif choice == 1:
+                    print('')
+                    user.all_items()
+                elif choice == 2:
+                    item_name = input("Enter Item Name : ")
+                    item_qty = int(input("Enter Item Quantity : "))
+                    user.buy_item(name=item_name, qty=item_qty)
+
         except CustomError as error:
             print(error)
     else:
