@@ -76,9 +76,9 @@ class User(Common):
                 invoices[self.username][name] = {"qty": qty, "price": int(items[name]['price']) * qty}
                 db.write_data(filename=invoice_file, content=json.dumps(invoices))
                 items = db.read_data(store_file)
-                items[name]['qyt'] = int(items[name]['qyt']) - qty
+                items[name]['qyt'] = int(items[name]['qty']) - qty
                 db.write_data(filename=store_file, content=json.dumps(items))
-                print('Buy Success...')
+                print(name, qty, 'Rs :', int(items[name]['price']) * qty, 'Buy Success...')
             else:
                 raise CustomError('Item Not Found: Quantity Not Available...!')
         else:

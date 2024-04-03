@@ -1,1 +1,1 @@
-{"user": {"Samsung": {"qty": 5, "price": 22500}}}
+{"user": {"Samsung": {"qty": 5, "price": 22500}, "Iphone": {"qty": 2, "price": 16000}}}
