@@ -108,6 +108,9 @@ if __name__ == '__main__':
                     username = input('Enter New User  UserName : ')
                     password = input('Enter New User Password : ')
                     admin.add_user(username=username, password=password)
+                elif choice == 5:
+                    print('Exiting...')
+                    break
                 else:
                     print('Invalid Choice')
         except CustomError as error:
@@ -119,7 +122,7 @@ if __name__ == '__main__':
             user = User(username=username, password=password)
             while True:
                 choice = int(input(
-                    '\n[0] Search Item \n[1] All Items \n[2] Buy Item \n[3] Return Item \nEnter Your Choice : '))
+                    '\n[0] Search Item \n[1] All Items \n[2] Buy Item \n[3] Return Item \n[5] Exit \nEnter Your Choice : '))
                 if choice == 0:
                     pass
                 elif choice == 1:
@@ -129,6 +132,11 @@ if __name__ == '__main__':
                     item_name = input("Enter Item Name : ")
                     item_qty = int(input("Enter Item Quantity : "))
                     user.buy_item(name=item_name, qty=item_qty)
+                elif choice == 5:
+                    print('Exiting...')
+                    break
+                else:
+                    print('Invalid Choice')
 
         except CustomError as error:
             print(error)
