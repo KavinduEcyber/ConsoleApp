@@ -1,0 +1,1 @@
+{"Samsung": {"qty": 5, "price": 4500}, "Iphone": {"qty": 10, "price": 8000, "qyt": 8}, "Sahan": {"qty": 12, "price": 6000.0}}

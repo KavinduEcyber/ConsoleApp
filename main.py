@@ -1,3 +1,5 @@
+import os
+from time import sleep
 import database as db
 import json
 import uuid
@@ -18,6 +20,7 @@ class Common:
         items = db.read_data(store_file)
         for item in items:
             print(item, items[item]['qty'], items[item]['price'])
+        print('')
 
 
 class Admin(Common):
@@ -26,6 +29,7 @@ class Admin(Common):
             users = db.read_data(filename=admin_file)
             if username in users:
                 if users[username] == password:
+                    os.system('cls')
                     print('Hello Admin Login Success...!')
                 else:
                     raise CustomError('Validation Error: UserName Or Password Incorrect!')
@@ -89,22 +93,25 @@ if __name__ == '__main__':
     print('Welcome To E-TEC BME Bio-Medical Equipment')
     user_type = str(input("Please Enter User Type 'admin' or 'customer' : ").lower())
     if user_type == 'admin':
+        os.system('cls')
         username = input('Enter Admin User Name : ')
         password = input('Enter User Password : ')
         try:
             admin = Admin(username=username, password=password)
             while True:
                 choice = int(input(
-                    '\n[0] Search Item \n[1] All Items \n[2] Add Item \n[3] Update Item \n[4] Add New User \n[5] Exit \nEnter Your Choice : '))
+                    '[0] Search Item \n[1] All Items \n[2] Add Item \n[3] Update Item \n[4] Add New User \n[5] Exit \nEnter Your Choice : '))
                 if choice == 1:
-                    print('')
+                    os.system('cls')
                     admin.all_items()
                 elif choice == 2:
+                    os.system('cls')
                     item = input('Enter New Item Name : ')
                     qty = int(input('Enter Item Qty : '))
                     price = float(input('Enter Item price : '))
                     admin.add_items(name=item, qty=qty, price=price)
                 elif choice == 4:
+                    os.system('cls')
                     username = input('Enter New User  UserName : ')
                     password = input('Enter New User Password : ')
                     admin.add_user(username=username, password=password)
@@ -115,20 +122,23 @@ if __name__ == '__main__':
                     print('Invalid Choice')
         except CustomError as error:
             print(error)
+            k = input("press close to exit")
     elif user_type == 'customer':
+        os.system('cls')
         username = input('Enter Customer User Name : ')
         password = input('Enter User Password : ')
         try:
             user = User(username=username, password=password)
             while True:
                 choice = int(input(
-                    '\n[0] Search Item \n[1] All Items \n[2] Buy Item \n[3] Return Item \n[5] Exit \nEnter Your Choice : '))
+                    '[0] Search Item \n[1] All Items \n[2] Buy Item \n[3] Return Item \n[5] Exit \nEnter Your Choice : '))
                 if choice == 0:
                     pass
                 elif choice == 1:
-                    print('')
+                    os.system('cls')
                     user.all_items()
                 elif choice == 2:
+                    os.system('cls')
                     item_name = input("Enter Item Name : ")
                     item_qty = int(input("Enter Item Quantity : "))
                     user.buy_item(name=item_name, qty=item_qty)
@@ -140,5 +150,6 @@ if __name__ == '__main__':
 
         except CustomError as error:
             print(error)
+            k = input("press close to exit")
     else:
         print('User Type', user_type, 'Not Available!')
